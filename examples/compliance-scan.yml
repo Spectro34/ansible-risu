@@ -1,0 +1,70 @@
+---
+# Compliance scanning example
+# Run security and compliance checks with RISU
+
+- name: Security and compliance scanning
+  hosts: all
+  gather_facts: yes
+  become: no
+  
+  vars:
+    compliance_output_dir: /var/reports/compliance
+    compliance_threshold: 0  # Maximum allowed failed checks
+    
+  tasks:
+    - name: Create compliance reports directory
+      file:
+        path: "{{ compliance_output_dir }}"
+        state: directory
+        mode: '0750'
+      become: yes
+    
+    - name: Run security diagnostics
+      risu:
+        state: run
+        filter: security
+        output: "{{ compliance_output_dir }}/security-{{ inventory_hostname }}-{{ ansible_date_time.date }}.json"
+        timeout: 600
+      register: security_scan
+    
+    - name: Display security scan results
+      debug:
+        msg:
+          - "Security scan completed"
+          - "Issues found: {{ security_scan.summary.failed }}"
+          - "Checks passed: {{ security_scan.summary.passed }}"
+    
+    - name: Save scan summary to file
+      copy:
+        content: |
+          Compliance Scan Report
+          =====================
+          Host: {{ inventory_hostname }}
+          Date: {{ ansible_date_time.iso8601 }}
+          
+          Summary:
+          - Total checks: {{ security_scan.summary.total_plugins }}
+          - Passed: {{ security_scan.summary.passed }}
+          - Failed: {{ security_scan.summary.failed }}
+          - Skipped: {{ security_scan.summary.skipped }}
+          
+          Report file: {{ security_scan.output_file }}
+        dest: "{{ compliance_output_dir }}/summary-{{ inventory_hostname }}.txt"
+      become: yes
+    
+    - name: Fail if critical security issues found
+      fail:
+        msg: "Compliance check failed: {{ security_scan.summary.failed }} critical security issues found"
+      when: security_scan.summary.failed > compliance_threshold
+    
+    - name: Send compliance report (placeholder)
+      debug:
+        msg: "Would send compliance report to monitoring system"
+      # Replace with actual monitoring integration:
+      # uri:
+      #   url: "{{ monitoring_api }}/compliance"
+      #   method: POST
+      #   body_format: json
+      #   body:
+      #     host: "{{ inventory_hostname }}"
+      #     issues: "{{ security_scan.summary.failed }}"

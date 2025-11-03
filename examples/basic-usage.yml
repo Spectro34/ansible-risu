@@ -1,0 +1,92 @@
+---
+# Basic usage example for the RISU Ansible module
+# This playbook demonstrates common use cases
+
+- name: Basic RISU diagnostic operations
+  hosts: all
+  gather_facts: yes
+  become: no
+  
+  vars:
+    risu_output_dir: /var/log/risu
+    
+  tasks:
+    - name: Ensure output directory exists
+      file:
+        path: "{{ risu_output_dir }}"
+        state: directory
+        mode: '0755'
+      become: yes
+      
+    # Task 1: Validate RISU installation
+    - name: Validate RISU is installed and working
+      risu:
+        state: validate
+      register: risu_validation
+      ignore_errors: yes
+    
+    - name: Display RISU version
+      debug:
+        msg: "{{ risu_validation.risu_version | default('RISU not found') }}"
+    
+    - name: Fail if RISU is not installed
+      fail:
+        msg: "RISU is not installed. Please install RISU first."
+      when: risu_validation.rc != 0
+    
+    # Task 2: List all available plugins
+    - name: Get list of all diagnostic plugins
+      risu:
+        state: list
+      register: all_plugins
+      when: risu_validation.rc == 0
+    
+    - name: Show plugin statistics
+      debug:
+        msg:
+          - "Total plugins available: {{ all_plugins.plugin_count }}"
+          - "Plugins by category: {{ all_plugins.plugins_by_category }}"
+      when: all_plugins is defined
+    
+    # Task 3: List plugins by category
+    - name: List system plugins only
+      risu:
+        state: list
+        filter: system
+      register: system_plugins
+      when: risu_validation.rc == 0
+    
+    - name: Display system plugin count
+      debug:
+        msg: "Found {{ system_plugins.plugin_count }} system plugins"
+      when: system_plugins is defined
+    
+    # Task 4: Run basic diagnostic scan
+    - name: Run system diagnostics
+      risu:
+        state: run
+        filter: system
+        output: "{{ risu_output_dir }}/system-scan-{{ ansible_date_time.epoch }}.json"
+        timeout: 300
+        quiet: yes
+      register: diagnostic_results
+      when: risu_validation.rc == 0
+    
+    - name: Display diagnostic summary
+      debug:
+        msg:
+          - "Scan completed in {{ diagnostic_results.elapsed | round(2) }} seconds"
+          - "Total plugins executed: {{ diagnostic_results.summary.total_plugins }}"
+          - "Passed: {{ diagnostic_results.summary.passed }}"
+          - "Failed: {{ diagnostic_results.summary.failed }}"
+          - "Skipped: {{ diagnostic_results.summary.skipped }}"
+          - "Output saved to: {{ diagnostic_results.output_file }}"
+      when: diagnostic_results is defined
+    
+    # Task 5: Check for critical issues
+    - name: Alert on critical issues
+      debug:
+        msg: "WARNING: {{ diagnostic_results.summary.failed }} critical issues detected!"
+      when:
+        - diagnostic_results is defined
+        - diagnostic_results.summary.failed > 0

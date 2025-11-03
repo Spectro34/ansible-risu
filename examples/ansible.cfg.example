@@ -1,0 +1,35 @@
+[defaults]
+# Inventory file location
+inventory = ./inventory.example
+
+# Module search path (add current directory)
+library = ../library
+
+# Disable host key checking for testing (enable in production)
+host_key_checking = False
+
+# Python interpreter discovery
+interpreter_python = auto_silent
+
+# Output formatting
+stdout_callback = yaml
+callbacks_enabled = profile_tasks, timer
+
+# Logging
+log_path = ./ansible.log
+
+# Retry files
+retry_files_enabled = False
+
+[privilege_escalation]
+# Become settings
+become = False
+become_method = sudo
+become_user = root
+become_ask_pass = False
+
+[ssh_connection]
+# SSH settings for better performance
+pipelining = True
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s
+control_path = %(directory)s/%%h-%%r

@@ -1,0 +1,32 @@
+# Example inventory file for RISU module testing
+
+[all:vars]
+ansible_user=root
+# Or use non-root with become
+# ansible_user=your_user
+# ansible_become=yes
+
+[risu_hosts]
+# Add your hosts here
+# server1.example.com
+# server2.example.com
+# 192.168.1.10
+
+[localhost]
+127.0.0.1 ansible_connection=local
+
+# Group-specific variables
+[risu_hosts:vars]
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_python_interpreter=/usr/bin/python3
+
+# Example with different host groups
+[production]
+# prod-server1.example.com
+# prod-server2.example.com
+
+[development]
+# dev-server1.example.com
+
+[staging]
+# stage-server1.example.com
