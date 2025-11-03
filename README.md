@@ -2,22 +2,9 @@
 
 A standalone, reusable Ansible module for interacting with the RISU diagnostic framework.
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Ansible](https://img.shields.io/badge/Ansible-2.9%2B-red.svg)](https://www.ansible.com/)
-
 ## Description
 
-This module provides a secure, production-ready interface to the [RISU](https://github.com/risuorg/risu) diagnostic framework. It can be used in any Ansible playbook or role without dependencies on specific project structures.
-
-## Features
-
-- ✅ **Standalone** - Works independently in any Ansible project
-- ✅ **Security Hardened** - Uses subprocess.run(), no eval()
-- ✅ **Distribution Agnostic** - Works with RPM, pip, or manual RISU installations
-- ✅ **Timeout Support** - Configurable execution timeouts
-- ✅ **Async Mode** - Support for long-running diagnostics
-- ✅ **Multiple Output Formats** - JSON, HTML, or text
-- ✅ **Check Mode** - Dry-run support
+This module provides a interface to the [RISU](https://github.com/risuorg/risu) diagnostic framework. It can be used in any Ansible playbook or role without dependencies on specific project structures.
 
 ## Requirements
 
@@ -132,8 +119,6 @@ See the [examples](examples/) directory for complete playbook examples:
 | `summary` | dict | Summary with pass/fail/skip counts |
 | `output_file` | string | Path to output file |
 
-## Development
-
 ### Running Tests
 
 ```bash
@@ -147,56 +132,6 @@ ansible-playbook examples/basic-usage.yml --check
 ansible-playbook examples/basic-usage.yml -i inventory
 ```
 
-### Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
-## Compatibility
-
-### RISU Installations
-
-- ✅ RPM packages (SUSE, RHEL, Fedora)
-- ✅ pip installations
-- ✅ Manual installations from source
-
-### Linux Distributions
-
-- ✅ SUSE Linux Enterprise Server (SLES)
-- ✅ openSUSE
-- ✅ Red Hat Enterprise Linux (RHEL)
-- ✅ CentOS / Rocky / Alma Linux
-- ✅ Fedora
-- ✅ Ubuntu / Debian
-
-### Ansible Versions
-
-- ✅ Ansible 2.9+
-- ✅ Ansible Core 2.11+
-- ✅ Ansible 5.x - 8.x
-
-## Security
-
-This module implements security best practices:
-
-- No use of `os.system()` or `eval()`
-- Proper subprocess handling with timeouts
-- Safe JSON/AST parsing
-- No hardcoded credentials
-- Input validation and sanitization
-
-## License
-
-GNU General Public License v3.0
-
-See [LICENSE](LICENSE) for the full license text.
 
 ## Author
 
@@ -205,15 +140,3 @@ Harshvardhan Sharma
 ## Acknowledgments
 
 - RISU Framework Team - Original diagnostic framework
-- Ansible Community - Module development patterns
-
-## Support
-
-- **Issues**: https://github.com/your-repo/ansible-risu/issues
-- **RISU Documentation**: https://github.com/risuorg/risu
-- **Ansible Documentation**: https://docs.ansible.com/
-
-## Related Projects
-
-- [RISU Framework](https://github.com/risuorg/risu) - The diagnostic framework this module interfaces with
-- [Ansible](https://github.com/ansible/ansible) - Automation platform
