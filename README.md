@@ -14,29 +14,29 @@ This module provides a interface to the [RISU](https://github.com/risuorg/risu) 
 
 ## Installation
 
-### Method 1: Copy to Your Project
+### Copy to Your Project
 
 ```bash
 # Copy module to your playbook directory
 mkdir -p library/
-wget https://raw.githubusercontent.com/your-repo/ansible-risu/main/library/risu.py -O library/risu.py
+wget https://raw.githubusercontent.com/ansible-risu/main/library/risu.py -O library/risu.py
 ```
 
-### Method 2: Install in Ansible Module Path
+### Install in Ansible Module Path
 
 ```bash
 # System-wide installation
 sudo mkdir -p /usr/share/ansible/plugins/modules/
-sudo wget https://raw.githubusercontent.com/your-repo/ansible-risu/main/library/risu.py \
+sudo wget https://raw.githubusercontent.com/ansible-risu/main/library/risu.py \
      -O /usr/share/ansible/plugins/modules/risu.py
 
 # Per-user installation
 mkdir -p ~/.ansible/plugins/modules/
-wget https://raw.githubusercontent.com/your-repo/ansible-risu/main/library/risu.py \
+wget https://raw.githubusercontent.com/ansible-risu/main/library/risu.py \
      -O ~/.ansible/plugins/modules/risu.py
 ```
 
-### Method 3: Use in a Role
+### Use in a Role
 
 ```bash
 roles/
